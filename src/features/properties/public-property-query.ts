@@ -3,13 +3,15 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 
 const pageSize = 12;
-const optionalText = z.string().trim().max(120).optional().transform((value) => value || undefined);
+const blankToUndefined = (value: unknown) => value === "" || value === undefined ? undefined : value;
+const optionalText = z.preprocess(blankToUndefined, z.string().trim().max(120).optional().transform((value) => value || undefined));
+const optionalNumber = z.preprocess(blankToUndefined, z.coerce.number().positive().optional());
 
 export const publicPropertyQuerySchema = z.object({
-  q: z.string().trim().max(100).optional().transform((value) => value || undefined),
-  status: z.enum(["FOR_SALE", "FOR_RENT"]).optional(), category: optionalText, city: optionalText, neighborhood: optionalText,
-  minPrice: z.coerce.number().positive().optional(), maxPrice: z.coerce.number().positive().optional(),
-  sort: z.enum(["newest", "price_asc", "price_desc"]).default("newest"), page: z.coerce.number().int().positive().default(1),
+  q: optionalText,
+  status: z.preprocess(blankToUndefined, z.enum(["FOR_SALE", "FOR_RENT"]).optional()), category: optionalText, city: optionalText, neighborhood: optionalText,
+  minPrice: optionalNumber, maxPrice: optionalNumber,
+  sort: z.preprocess(blankToUndefined, z.enum(["newest", "price_asc", "price_desc"]).default("newest")), page: z.preprocess(blankToUndefined, z.coerce.number().int().positive().default(1)),
 });
 export type PublicPropertyQuery = z.infer<typeof publicPropertyQuerySchema>;
 export function parsePublicPropertyQuery(input: Record<string, string | string[] | undefined>) {
