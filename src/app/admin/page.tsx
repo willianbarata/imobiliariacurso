@@ -1,8 +1,5 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { requireUser } from "@/auth/session";
-
-export default async function AdminPage() {
-  const user = await requireUser();
-  if (!user) redirect("/login");
-  return <main className="home"><p className="eyebrow">Administração</p><h1>Painel administrativo</h1><p>Sessão protegida no servidor. A gestão de imóveis será adicionada nas próximas fases.</p></main>;
-}
+import { prisma } from "@/lib/prisma";
+export default async function AdminPage() { const user = await requireUser(); if (!user) redirect("/login"); const groups = await prisma.property.groupBy({ by: ["status"], where: { deletedAt: null }, _count: { _all: true } }); const count = (status: string) => groups.find((item) => item.status === status)?._count._all ?? 0; return <main className="admin-shell"><header><p className="eyebrow">Administração</p><h1>Painel</h1><Link href="/admin/imoveis/novo">Cadastrar imóvel</Link></header><section className="stat-grid"><article><span>À venda</span><strong>{count("FOR_SALE")}</strong></article><article><span>Para aluguel</span><strong>{count("FOR_RENT")}</strong></article><article><span>Vendidos</span><strong>{count("SOLD")}</strong></article><article><span>Alugados</span><strong>{count("RENTED")}</strong></article></section><Link className="admin-link" href="/admin/imoveis">Gerenciar imóveis</Link></main>; }

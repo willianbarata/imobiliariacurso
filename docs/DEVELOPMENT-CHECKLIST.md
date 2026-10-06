@@ -88,19 +88,19 @@ Evidência Fase 9: teste controlado confirmou que FOR_SALE publicado aparece na 
 
 ## FASE 10 — Busca, filtros e paginação (SEARCH-001/FILTER-001)
 
-- [ ] Implementar busca por código, título, cidade e bairro.
-- [ ] Implementar filtros finalidade, categoria, cidade, bairro e faixa de preço.
+- [x] Implementar busca por código, título, cidade e bairro.
+- [x] Implementar filtros finalidade, categoria, cidade, bairro e faixa de preço.
 - [ ] Implementar ordem e paginação server-side com query string; testar combinações.
 
 ## FASE 11 — Detalhes do imóvel (SEARCH-001)
 
-- [ ] Criar `/imoveis/[slug]` com fotos, preço, descrição, categoria e região.
+- [x] Criar `/imoveis/[slug]` com fotos, preço, descrição, categoria e região.
 - [ ] Implementar carrossel, 404 para anúncio não elegível e layout mobile.
 
 ## FASE 12 — WhatsApp (WHATSAPP-001)
 
-- [ ] Compor mensagem com código, imóvel, finalidade, preço, região e URL.
-- [ ] Codificar URL, validar número e criar CTA acessível, inclusive no celular.
+- [x] Compor mensagem com código, imóvel, finalidade, preço, região e URL.
+- [x] Codificar URL, validar número e criar CTA acessível, inclusive no celular.
 - [ ] Testar link e ausência de endereço privado.
 
 ## FASE 13 — Google Maps (MAP-001)
@@ -111,22 +111,24 @@ Evidência Fase 9: teste controlado confirmou que FOR_SALE publicado aparece na 
 
 ## FASE 14 — Painel administrativo
 
-- [ ] Criar layout protegido e dashboard com contagens por status.
+- [x] Criar layout protegido e dashboard com contagens por status.
 - [ ] Criar listagem administrativa com busca, filtros, paginação e estados vazios.
 - [ ] Testar uso em celular e acesso negado a visitante.
 
 ## FASE 15 — CRUD de imóveis (PROPERTY-001/002)
 
-- [ ] Criar formulário em seções e schemas Zod compartilhados.
-- [ ] Implementar criação de rascunho, edição, publicação, código/slug e auditoria.
-- [ ] Implementar status SOLD/RENTED e soft delete com confirmação.
+- [x] Criar formulário em seções e schemas Zod compartilhados.
+- [x] Implementar criação de rascunho, código/slug e auditoria.
+- [x] Implementar status SOLD/RENTED e soft delete.
 - [ ] Testar validações, autorização, transições e remoção pública.
 
 ## FASE 16 — Consulta de CEP (CEP-001)
 
-- [ ] Integrar ViaCEP com timeout, loading e CEP inválido/inexistente.
-- [ ] Preencher campos editáveis e preservar edição manual em falha.
+- [x] Integrar ViaCEP com timeout, loading e CEP inválido/inexistente.
+- [x] Preencher campos editáveis e preservar edição manual em falha.
 - [ ] Testar todas as respostas e indisponibilidade.
+
+Evidência parcial Fases 10–16: filtros, detalhe, CTA WhatsApp, dashboard, formulário de rascunho e ViaCEP foram implementados. ViaCEP retornou 200 para o CEP `01001000`; criação e soft delete administrativos retornaram 201/200. Google Maps aguarda DECISION-004 e uma chave restrita. Publicação, carrossel e edição completa dependem da gestão de imagens das Fases 17–19.
 
 ## FASE 17 — MinIO (IMAGE-001)
 
