@@ -109,6 +109,8 @@ Evidência Fase 9: teste controlado confirmou que FOR_SALE publicado aparece na 
 - [ ] Configurar chave restrita, carregamento sob demanda e mapa no detalhe.
 - [ ] Criar fallback sem coordenadas e testar privacidade.
 
+Funcionalidade adiada para uma fase futura: depende da política de divulgação do endereço exato e de uma chave Google Maps restrita por domínio. O modelo já preserva latitude e longitude opcionais; nenhuma coordenada é exposta publicamente enquanto esta fase estiver pendente.
+
 ## FASE 14 — Painel administrativo
 
 - [x] Criar layout protegido e dashboard com contagens por status.
@@ -132,34 +134,44 @@ Evidência parcial Fases 10–16: filtros, detalhe, CTA WhatsApp, dashboard, for
 
 ## FASE 17 — MinIO (IMAGE-001)
 
-- [ ] Criar StorageService e cliente S3 por ambiente.
+- [x] Criar StorageService e cliente S3 por ambiente.
 - [ ] Criar bucket local e política de menor privilégio.
-- [ ] Implementar upload, exclusão e entrega controlada.
-- [ ] Validar assinatura/MIME, tamanho e chave segura; testar operações.
+- [x] Implementar upload, exclusão e entrega controlada.
+- [x] Validar assinatura/MIME, tamanho e chave segura; testar operações.
+
+Evidência parcial Fase 17: upload para o bucket remoto `imobiliaria`, exclusão de objeto e URL assinada de 60 segundos foram validados. Bucket local e credencial de mínimo privilégio ficam pendentes porque o ambiente remoto atual usa a conta root do MinIO.
 
 ## FASE 18 — Upload múltiplo (IMAGE-001)
 
-- [ ] Validar múltiplos arquivos e limite por imagem/quantidade.
-- [ ] Enviar objetos e salvar referências no PostgreSQL sem registros órfãos.
+- [x] Validar múltiplos arquivos e limite por imagem/quantidade.
+- [x] Enviar objetos e salvar referências no PostgreSQL sem registros órfãos.
 - [ ] Implementar compensação e teste de falhas em cada etapa.
+
+Evidência parcial Fase 18: dois PNGs foram enviados no mesmo request, metadados foram persistidos e removidos no teste. A compensação de falha do banco está implementada, mas cenários de falha injetada permanecem para a Fase 24.
 
 ## FASE 19 — Gestão de imagens (IMAGE-001)
 
-- [ ] Selecionar principal única, reordenar e excluir com confirmação.
-- [ ] Impedir publicação sem principal e exclusão da última imagem publicada.
+- [x] Selecionar principal única, reordenar e excluir com confirmação.
+- [x] Impedir publicação sem principal e exclusão da última imagem publicada.
 - [ ] Conferir imagem do card e ordem do carrossel.
+
+Evidência parcial Fase 19: o teste validou imagem principal, reordenação, promoção automática ao excluir a principal e bloqueio da remoção da última imagem publicada. Card e carrossel dependem da renderização final das imagens na UI.
 
 ## FASE 20 — Gestão dos usuários (USER-001)
 
-- [ ] Criar lista, cadastro, edição, ativação, desativação e role para ADMIN.
-- [ ] Garantir email único, senha segura, revogação e proteção do último ADMIN.
-- [ ] Testar 403 para USER e fluxos de desativação.
+- [x] Criar lista, cadastro, edição, ativação, desativação e role para ADMIN.
+- [x] Garantir email único, senha segura, revogação e proteção do último ADMIN.
+- [x] Testar 403 para USER e fluxos de desativação.
+
+Evidência Fase 20: endpoints ADMIN e listagem administrativa criados. Teste remoto criou USER temporário, confirmou 403 para recursos administrativos, desativou o usuário, confirmou revogação de sessão e removeu o registro ao final.
 
 ## FASE 21 — Configurações (SETTINGS-001)
 
-- [ ] Criar tela ADMIN e API de WhatsApp padrão.
-- [ ] Copiar padrão na criação, permitir override e manter imóveis existentes.
-- [ ] Testar validação do número e 403 para USER.
+- [x] Criar tela ADMIN e API de WhatsApp padrão.
+- [x] Copiar padrão na criação, permitir override e manter imóveis existentes.
+- [x] Testar validação do número e 403 para USER.
+
+Evidência Fase 21: tela e API ADMIN implementadas; formulário de imóvel recebe o número padrão como valor inicial e permite edição. Teste remoto confirmou atualização de configurações e 403 para USER.
 
 ## FASE 22 — Segurança (NFR-001)
 
@@ -167,11 +179,15 @@ Evidência parcial Fases 10–16: filtros, detalhe, CTA WhatsApp, dashboard, for
 - [ ] Revisar RBAC, XSS, SQL injection, uploads, secrets e logs.
 - [ ] Executar testes negativos documentados em SECURITY.md.
 
+Implementação parcial: cookies HttpOnly/SameSite, JWT curto, refresh rotativo, Argon2id, validação Zod, bloqueio de Origin inválida, headers de segurança e limite de login em memória estão ativos. Rate limit compartilhado, CSP final e revisão completa permanecem pendentes.
+
 ## FASE 23 — Tratamento de erros
 
 - [ ] Padronizar códigos/respostas de API e mensagens de campo.
 - [ ] Criar feedback de loading, sucesso, erro, vazio e confirmação destrutiva.
 - [ ] Testar falhas de PostgreSQL, MinIO, ViaCEP e Maps.
+
+Implementação parcial: cadastro de imóvel informa carregamento, bloqueia reenvio, exibe toast para erro ou retorno do ViaCEP e permite retorno à lista. O login possui alternância de visibilidade de senha; o campo de preço formata BRL; imagens selecionadas mostram prévia e permitem escolher a capa.
 
 ## FASE 24 — Testes
 

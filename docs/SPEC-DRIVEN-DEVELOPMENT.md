@@ -86,6 +86,8 @@ Objetivo: reduzir digitação. Ator: USER/ADMIN. Pré-condição: formulário ab
 
 Objetivo: contextualizar localização pública. Ator: visitante. Pré-condição: coordenadas válidas e divulgação autorizada. Fluxo: renderizar Google Maps no detalhe. Alternativas: sem coordenadas ou autorização, exibir região/fallback sem mapa exato. Permissão: pública. Aceite: mapa nunca recebe coordenadas ausentes ou privadas. Testes: componente e E2E em cenários com e sem mapa.
 
+Status: adiado para versão futura até que a imobiliária defina a política de endereço público e forneça chave Google Maps com restrição de domínio.
+
 ### WHATSAPP-001 — Contato
 
 Objetivo: iniciar atendimento sobre imóvel. Ator: visitante. Pré-condição: imóvel público com número válido. Fluxo: CTA abre `wa.me` com número e mensagem codificada contendo código, título, finalidade, preço, região e URL canônica. Alternativas: número ausente/inválido impede CTA e registra erro operacional. Permissão: pública. Aceite: URL codificada corretamente, sem dados de endereço exato não autorizados. Testes: unitário de composição e E2E do link.
@@ -101,6 +103,8 @@ Objetivo: indexar anúncios disponíveis. Ator: buscador/visitante. Pré-condiç
 ## Requisitos não funcionais
 
 NFR-001 Segurança: hash de senha, RBAC no servidor, cookies HttpOnly/Secure/SameSite, CSRF, rate limit, validação e headers conforme [SECURITY.md](SECURITY.md). NFR-002 Responsividade: verificar 375, 768, 1024 e 1440 px, inclusive admin. NFR-003 Acessibilidade: labels, teclado, foco visível, alt e contraste. NFR-004 Performance: paginação no servidor, imagens otimizadas, índices, ausência de N+1 e lazy loading. NFR-005 Operação: Docker multi-stage, health checks, migrations versionadas e EasyPanel. NFR-006 Confiabilidade: erros previsíveis, transações quando cabíveis, compensação de upload. NFR-007 Localização: pt-BR, BRL e timezone explícito na apresentação; timestamps UTC no banco.
+
+NFR-008 Feedback administrativo: formulários exibem carregamento durante mutações, toast de sucesso/erro, ação de voltar e confirmação para operações destrutivas. Campos de preço aceitam e exibem BRL com duas casas decimais. Seleção de imagens mostra previews antes do envio e permite definir a capa.
 
 ## Entidades, relacionamentos e fluxos
 
