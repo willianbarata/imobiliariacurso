@@ -5,6 +5,8 @@ import { PublicHeader } from "@/components/public-header";
 import { PropertyGallery } from "@/components/property-gallery";
 import { getPublicPropertyBySlug } from "@/features/properties/public-property-query";
 
+export const dynamic = "force-dynamic";
+
 type PageProps = { params: Promise<{ slug: string }> };
 export default async function PropertyPage({ params }: PageProps) {
   const property = await getPublicPropertyBySlug((await params).slug); if (!property) notFound();

@@ -5,6 +5,8 @@ import { PropertyCard } from "@/components/property-card";
 import { listPublicProperties, parsePublicPropertyQuery } from "@/features/properties/public-property-query";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
 type PageProps = { searchParams: Promise<Record<string, string | string[] | undefined>> };
 export default async function PropertiesPage({ searchParams }: PageProps) {
   const query = parsePublicPropertyQuery(await searchParams) ?? parsePublicPropertyQuery({})!;

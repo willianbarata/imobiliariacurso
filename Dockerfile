@@ -7,7 +7,7 @@ FROM node:22-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN DATABASE_URL=postgresql://placeholder:placeholder@localhost:5432/placeholder npx prisma generate && npm run build
+RUN export DATABASE_URL=postgresql://placeholder:placeholder@localhost:5432/placeholder && npx prisma generate && npm run build
 RUN rm -f .next/standalone/.env .next/standalone/.env.local .next/standalone/.env.production
 
 FROM node:22-alpine AS runner
