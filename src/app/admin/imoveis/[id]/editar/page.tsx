@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { requireUser } from "@/auth/session";
 import { PropertyForm } from "@/components/property-form";
 import { AdminImageGallery } from "@/components/admin-image-gallery";
+import { PropertyFormTips } from "@/components/property-form-tips";
 import { prisma } from "@/lib/prisma";
 
 export default async function EditPropertyPage({ params }: { params: Promise<{ id: string }> }) {
@@ -15,5 +16,5 @@ export default async function EditPropertyPage({ params }: { params: Promise<{ i
   ]);
   if (!property) notFound();
   const initialProperty = { id: property.id, title: property.title, description: property.description, price: property.price.toString(), status: property.status, publicationState: property.publicationState, categoryId: property.categoryId, zipCode: property.zipCode, street: property.street, number: property.number, complement: property.complement, neighborhood: property.neighborhood, city: property.city, state: property.state, country: property.country, latitude: property.latitude?.toString() ?? null, longitude: property.longitude?.toString() ?? null, whatsappNumber: property.whatsappNumber, imageCount: property._count.images, images: property.images };
-  return <main className="admin-shell admin-modern"><Link className="back-link" href="/admin/imoveis">← Voltar para imóveis</Link><p className="eyebrow">Administração</p><h1>Editar imóvel</h1><PropertyForm categories={categories} defaultWhatsappNumber={settings?.defaultWhatsappNumber ?? ""} property={initialProperty} /><AdminImageGallery propertyId={property.id} images={property.images} /></main>;
+  return <main className="admin-shell admin-modern"><Link className="back-link" href="/admin/imoveis">← Voltar para imóveis</Link><p className="eyebrow">Administração</p><h1>Editar imóvel</h1><p className="admin-page-description">Atualize as informações e imagens do anúncio.</p><div className="admin-form-layout"><div><PropertyForm categories={categories} defaultWhatsappNumber={settings?.defaultWhatsappNumber ?? ""} property={initialProperty} /><AdminImageGallery propertyId={property.id} images={property.images} /></div><PropertyFormTips /></div></main>;
 }

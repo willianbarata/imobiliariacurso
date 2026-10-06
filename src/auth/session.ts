@@ -30,7 +30,7 @@ export async function requireUser(requiredRole?: Role) {
     const session = await verifyAccessToken(token);
     const user = await prisma.user.findUnique({
       where: { id: session.userId },
-      select: { id: true, role: true, active: true },
+      select: { id: true, name: true, role: true, active: true },
     });
     if (!user?.active || (requiredRole === Role.ADMIN && user.role !== Role.ADMIN)) return null;
     return user;
