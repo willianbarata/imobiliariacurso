@@ -19,17 +19,17 @@ export async function POST(request: NextRequest) {
   }
 
   const limitKey = `${ip}:${input.email}`;
-  if (!loginAllowed(limitKey)) {
+  if (!(await loginAllowed(limitKey))) {
     return NextResponse.json({ success: false, error: { code: "RATE_LIMITED", message: "Tente novamente mais tarde." } }, { status: 429, headers: { "Retry-After": "900" } });
   }
 
   const user = await prisma.user.findUnique({ where: { email: input.email } });
   if (!user || !user.active || !(await verifyPassword(user.passwordHash, input.password))) {
-    recordFailedLogin(limitKey);
+    await recordFailedLogin(limitKey);
     return invalidCredentials();
   }
 
-  clearFailedLogins(limitKey);
+  await clearFailedLogins(limitKey);
   const refreshToken = createRefreshToken();
   await prisma.refreshSession.create({
     data: { userId: user.id, tokenHash: hashRefreshToken(refreshToken), familyId: createSessionFamilyId(), expiresAt: refreshExpiry() },

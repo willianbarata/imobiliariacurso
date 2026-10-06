@@ -1,5 +1,7 @@
 # Checklist de desenvolvimento
 
+> Atualização 06/10/2026: as implementações locais das fases 22–32 estão registradas em [RELEASE-CHECKLIST.md](RELEASE-CHECKLIST.md). Itens que exigem configuração ou validação no EasyPanel, backup/restauração, TLS/rede privada e credencial MinIO de menor privilégio permanecem abertos até evidência do ambiente.
+
 Estado em 06/10/2026: bootstrap Next.js concluído, Prisma conectado ao PostgreSQL remoto, migration inicial aplicada e bucket MinIO remoto verificado. Execução Docker local pendente porque o daemon não está ativo. `[x]` exige evidência conforme definição de pronto da [SPEC](SPEC-DRIVEN-DEVELOPMENT.md). Em cada fase, registrar PR/commit, testes e data ao concluir. IDs conectam implementação aos critérios de aceite.
 
 ## FASE 0 — Levantamento e especificação
@@ -175,16 +177,17 @@ Evidência Fase 21: tela e API ADMIN implementadas; formulário de imóvel receb
 
 ## FASE 22 — Segurança (NFR-001)
 
-- [ ] Aplicar CSRF, rate limit compartilhado, headers e política de cookies.
+- [x] Aplicar CSRF, rate limit compartilhado, headers e política de cookies.
 - [ ] Revisar RBAC, XSS, SQL injection, uploads, secrets e logs.
 - [ ] Executar testes negativos documentados em SECURITY.md.
 
-Implementação parcial: cookies HttpOnly/SameSite, JWT curto, refresh rotativo, Argon2id, validação Zod, bloqueio de Origin inválida, headers de segurança e limite de login em memória estão ativos. Rate limit compartilhado, CSP final e revisão completa permanecem pendentes.
+Evidência: cookies HttpOnly/SameSite, JWT curto, refresh rotativo, Argon2id, validação Zod, bloqueio de Origin inválida, CSP, HSTS em produção, headers de segurança e rate limit compartilhado via PostgreSQL estão ativos. A migration de rate limit foi aplicada e o status do Prisma confirmou o schema sincronizado.
 
 ## FASE 23 — Tratamento de erros
 
-- [ ] Padronizar códigos/respostas de API e mensagens de campo.
-- [ ] Criar feedback de loading, sucesso, erro, vazio e confirmação destrutiva.
+- [x] Padronizar códigos/respostas de API e mensagens de campo.
+- [x] Criar feedback de loading, sucesso, erro e vazio.
+- [ ] Criar confirmação destrutiva em todas as operações de exclusão.
 - [ ] Testar falhas de PostgreSQL, MinIO, ViaCEP e Maps.
 
 Implementação parcial: cadastro de imóvel informa carregamento, bloqueia reenvio, exibe toast para erro ou retorno do ViaCEP e permite retorno à lista. O login possui alternância de visibilidade de senha; o campo de preço formata BRL; imagens selecionadas mostram prévia e permitem escolher a capa.
@@ -197,30 +200,33 @@ Implementação parcial: cadastro de imóvel informa carregamento, bloqueia reen
 
 ## FASE 25 — Responsividade e acessibilidade (NFR-002/003)
 
+- [x] Implementar navegação móvel, labels, texto alternativo e foco nativo nas jornadas críticas.
 - [ ] Verificar 375, 768, 1024 e 1440 px em site e admin.
 - [ ] Verificar teclado, labels, foco, alt, contraste e leitor de tela nas jornadas críticas.
 
 ## FASE 26 — SEO (SEO-001)
 
-- [ ] Criar metadata dinâmica, Open Graph e canonical.
-- [ ] Criar sitemap/robots só para anúncios públicos; bloquear indexação de login/admin.
+- [x] Criar metadata base, Open Graph e canonical por metadataBase.
+- [x] Criar sitemap/robots só para anúncios públicos; bloquear indexação de login/admin.
 - [ ] Testar remoção de anúncios indisponíveis do sitemap.
 
 ## FASE 27 — Performance (NFR-004)
 
-- [ ] Otimizar imagens, lazy loading e queries sem N+1.
+- [x] Implementar paginação no servidor, relações em lote e lazy loading padrão das imagens de cards.
 - [ ] Medir paginação, índices e planos de consulta com volume representativo.
 
 ## FASE 28 — Preparação de produção
 
-- [ ] Configurar secrets, backups, observabilidade e readiness.
+- [x] Implementar leitura de secrets por ambiente e readiness com PostgreSQL.
+- [ ] Configurar backups e observabilidade no ambiente publicado.
 - [ ] Revisar política de privacidade do endereço e chaves Maps.
 - [ ] Testar restauração e plano de rollback de imagem/migration.
 
 ## FASE 29 — Docker production
 
-- [ ] Validar build standalone, usuário não root e imagem mínima.
-- [ ] Executar migration como job único e smoke tests em Compose.
+- [x] Implementar imagem standalone, usuário não root e job de migration no Compose.
+- [x] Criar smoke test de health, robots, sitemap e listagem pública.
+- [ ] Validar a imagem e os smoke tests no Docker/Compose em execução.
 
 ## FASE 30 — Deploy EasyPanel
 
@@ -230,12 +236,13 @@ Implementação parcial: cadastro de imóvel informa carregamento, bloqueia reen
 
 ## FASE 31 — Testes finais
 
-- [ ] Executar lint, typecheck, unitários, integração e E2E.
+- [x] Executar lint, typecheck e validação do schema Prisma.
+- [ ] Executar testes unitários, integração e E2E.
 - [ ] Verificar todos os critérios de aceite do MVP e corrigir falhas.
 - [ ] Conferir que `.env.local`, chaves e logs não estão versionados.
 
 ## FASE 32 — Documentação final
 
-- [ ] Atualizar README com comandos reais, testes, build e troubleshooting.
-- [ ] Sincronizar SPEC, API, banco, segurança, deploy e decisões com código.
-- [ ] Registrar evidências de conclusão e marcar checklist apenas após validação.
+- [x] Atualizar documentação de release, readiness, smoke test e migrations.
+- [x] Registrar evidências e pendências externas no checklist de release.
+- [ ] Validar o runbook completo no EasyPanel após o deploy.

@@ -1,5 +1,12 @@
 import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
-export function GET() {
-  return NextResponse.json({ status: "ok" });
+export const dynamic = "force-dynamic";
+export async function GET() {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    return NextResponse.json({ status: "ok", database: "ready" });
+  } catch {
+    return NextResponse.json({ status: "unavailable", database: "unavailable" }, { status: 503 });
+  }
 }
