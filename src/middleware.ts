@@ -10,7 +10,12 @@ export function middleware(request: NextRequest) {
   if (process.env.NODE_ENV === "production") response.headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
   if (request.nextUrl.pathname.startsWith("/api/") && !["GET", "HEAD", "OPTIONS"].includes(request.method)) {
     const origin = request.headers.get("origin");
-    if (origin && origin !== request.nextUrl.origin) return NextResponse.json({ success: false, error: { code: "CSRF_ORIGIN_REJECTED", message: "Origem inválida." } }, { status: 403 });
+    const configuredOrigin = process.env.APP_URL?.replace(/\/$/, "");
+    const forwardedHost = request.headers.get("x-forwarded-host");
+    const forwardedProto = request.headers.get("x-forwarded-proto")?.split(",")[0]?.trim();
+    const forwardedOrigin = forwardedHost && forwardedProto ? `${forwardedProto}://${forwardedHost}` : undefined;
+    const allowedOrigins = new Set([request.nextUrl.origin, configuredOrigin, forwardedOrigin].filter((value): value is string => Boolean(value)));
+    if (origin && !allowedOrigins.has(origin)) return NextResponse.json({ success: false, error: { code: "CSRF_ORIGIN_REJECTED", message: "Origem inválida." } }, { status: 403 });
   }
   return response;
 }
